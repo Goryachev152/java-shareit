@@ -1,8 +1,8 @@
-package ru.practicum.shareit.booking.dto;
+package ru.practicum.shareit.booking.model;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Value;
-import ru.practicum.shareit.booking.model.Status;
 
 import java.time.LocalDateTime;
 
@@ -11,11 +11,14 @@ import java.time.LocalDateTime;
  */
 @Value
 @Builder(toBuilder = true)
-public class BookingDto {
+public class Booking {
     Long id;
     LocalDateTime start;
     LocalDateTime end;
+    @NotNull
     Long item;
+    @NotNull
     Long booker;
+    @NotNull
     Status status;
 }
