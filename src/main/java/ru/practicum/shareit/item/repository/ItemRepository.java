@@ -29,7 +29,7 @@ public class ItemRepository {
     public List<Item> getAllItemByUserId(Long userId) {
         return itemMap.values()
                 .stream()
-                .filter(item -> item.getOwner() == userId)
+                .filter(item -> item.getOwner().equals(userId))
                 .toList();
     }
 

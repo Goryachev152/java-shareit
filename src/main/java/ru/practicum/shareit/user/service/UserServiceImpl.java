@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
     private boolean isDuplicateEmailUpdateUser(User updateUser, Long userId) {
         return userRepository.getAllUsers()
                 .stream()
-                .filter(user -> user.getId() != userId)
+                .filter(user -> !user.getId().equals(userId))
                 .noneMatch(user -> user.getEmail().equals(updateUser.getEmail()));
     }
 
