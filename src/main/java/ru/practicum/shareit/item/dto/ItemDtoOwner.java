@@ -9,7 +9,7 @@ import java.util.List;
 
 @Value
 @Builder(toBuilder = true)
-public class ItemDtoUser {
+public class ItemDtoOwner {
     Long id;
     String name;
     String description;

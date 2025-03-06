@@ -2,7 +2,7 @@ package ru.practicum.shareit.item.dto;
 
 import lombok.Builder;
 import lombok.Value;
-import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.user.model.User;
 
 /**
  * TODO Sprint add-controllers.
@@ -14,6 +14,6 @@ public class ItemDto {
     String name;
     String description;
     Boolean available;
-    Long owner;
-    ItemRequest request;
+    User owner;
+    Long request;
 }
