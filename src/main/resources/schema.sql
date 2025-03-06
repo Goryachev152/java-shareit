@@ -41,6 +41,6 @@ CREATE TABLE If NOT EXISTS comments (
   author_id BIGINT NOT NULL,
   created_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
   CONSTRAINT pk_comments PRIMARY KEY (id),
-  CONSTRAINT fk_bookings_to_items FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE,
-  CONSTRAINT fk_bookings_to_author FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
+  CONSTRAINT fk_comments_to_items FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE,
+  CONSTRAINT fk_comments_to_author FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE
 );
