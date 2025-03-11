@@ -1,9 +1,9 @@
 package ru.practicum.shareit.user.service;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.DuplicateEmailException;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.user.dto.UpdateUserRequest;
 import ru.practicum.shareit.user.dto.UserDto;
@@ -20,17 +20,15 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
+    @Transactional
     @Override
     public UserDto createUser(User user) {
-        if (isDuplicateEmail(user)) {
-            User newUser = userRepository.createUser(user);
+            User newUser = userRepository.save(user);
             log.info("Пользователь с id {} добавлен в сервис", newUser.getId());
             return UserMapper.mapToUserDto(newUser);
-        } else {
-            throw new DuplicateEmailException("Этот Email = " + user.getEmail() + " уже занят");
-        }
     }
 
+    @Transactional
     @Override
     public UserDto updateUser(UpdateUserRequest updateUserRequest, Long userId) {
         User updateUser = validNotFoundUser(userId);
@@ -51,18 +49,14 @@ public class UserServiceImpl implements UserService {
                     .name(updateUserRequest.getName())
                     .build();
         }
-        if (isDuplicateEmailUpdateUser(updateUser, userId)) {
-            userRepository.updateUser(updateUser, userId);
+            userRepository.save(updateUser);
             log.info("Пользователь с id {} обновлен", updateUser.getId());
             return UserMapper.mapToUserDto(updateUser);
-        } else {
-            throw new DuplicateEmailException("Этот Email = " + updateUserRequest.getEmail() + " уже занят");
-        }
     }
 
     @Override
     public List<UserDto> getAllUsers() {
-        return userRepository.getAllUsers()
+        return userRepository.findAll()
                 .stream()
                 .map(UserMapper::mapToUserDto)
                 .toList();
@@ -74,29 +68,17 @@ public class UserServiceImpl implements UserService {
         return UserMapper.mapToUserDto(user);
     }
 
+    @Transactional
     @Override
     public UserDto deleteByIdUser(Long userId) {
         User user = validNotFoundUser(userId);
-        userRepository.deleteByUserId(userId);
+        userRepository.delete(user);
         log.info("Пользователь с id {} удален из сервиса", userId);
         return UserMapper.mapToUserDto(user);
     }
 
-    private boolean isDuplicateEmail(User user) {
-        return userRepository.getAllUsers()
-                .stream()
-                .noneMatch(mapEmail -> mapEmail.equals(user));
-    }
-
-    private boolean isDuplicateEmailUpdateUser(User updateUser, Long userId) {
-        return userRepository.getAllUsers()
-                .stream()
-                .filter(user -> !user.getId().equals(userId))
-                .noneMatch(user -> user.getEmail().equals(updateUser.getEmail()));
-    }
-
     private User validNotFoundUser(Long userId) {
-        Optional<User> user = userRepository.getByIdUser(userId);
+        Optional<User> user = userRepository.findById(userId);
         if (user.isPresent()) {
             return user.get();
         } else {
