@@ -14,6 +14,8 @@ import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserServiceImpl;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -61,6 +63,17 @@ public class UserServiceTest {
     }
 
     @Test
+    void updateUser_ShouldReturnUserDtoNewName() {
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        when(userRepository.save(any())).thenReturn(user);
+        userService.createUser(user);
+        UpdateUserRequest updatedUserRequest = UpdateUserRequest.builder().name("gorych").build();
+        UserDto result = userService.updateUser(updatedUserRequest, user.getId());
+        assertNotNull(result);
+        assertEquals(updatedUserRequest.getName(), result.getName());
+    }
+
+    @Test
     void updateUser_ShouldThrowNotFoundExceptionUser() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
         UpdateUserRequest updatedUserRequest = UpdateUserRequest.builder().name("gorych").email("gorych152@mail.ru").build();
@@ -86,6 +99,16 @@ public class UserServiceTest {
             userService.getByIdUser(2L);
         });
         assertEquals("Пользователь с id = 2 не найден", exception.getMessage());
+    }
+
+    @Test
+    void getAllUsers_ShouldListUsers() {
+        when(userRepository.findAll()).thenReturn(Collections.singletonList(user));
+        List<UserDto> result = userService.getAllUsers();
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(user.getId(), result.get(0).getId());
+        verify(userRepository).findAll();
     }
 
     @Test

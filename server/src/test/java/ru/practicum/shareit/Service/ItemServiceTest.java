@@ -135,6 +135,59 @@ public class ItemServiceTest {
     }
 
     @Test
+    void updateItem_ShouldReturnUpdatedItemNewAvailable() {
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
+        when(itemRepository.save(any(Item.class))).thenReturn(item);
+        Item updatedItem = Item.builder().available(false).build();
+        ItemDto result = itemService.updateItem(user.getId(), item.getId(), updatedItem);
+        assertNotNull(result);
+        assertEquals(updatedItem.getAvailable(), result.getAvailable());
+        verify(itemRepository).save(any(Item.class));
+    }
+
+    @Test
+    void updateItem_ShouldReturnUpdatedItemNewAllFields() {
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
+        when(itemRepository.save(any(Item.class))).thenReturn(item);
+        Item updatedItem = Item.builder().name("newName").description("newDescription").available(false).build();
+        ItemDto result = itemService.updateItem(user.getId(), item.getId(), updatedItem);
+        assertNotNull(result);
+        assertEquals(updatedItem.getAvailable(), result.getAvailable());
+        assertEquals(updatedItem.getName(), result.getName());
+        assertEquals(updatedItem.getDescription(), result.getDescription());
+        verify(itemRepository).save(any(Item.class));
+    }
+
+    @Test
+    void updateItem_ShouldReturnUpdatedItemNewNameAndAvailable() {
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
+        when(itemRepository.save(any(Item.class))).thenReturn(item);
+        Item updatedItem = Item.builder().name("newName").available(false).build();
+        ItemDto result = itemService.updateItem(user.getId(), item.getId(), updatedItem);
+        assertNotNull(result);
+        assertEquals(updatedItem.getAvailable(), result.getAvailable());
+        assertEquals(updatedItem.getName(), result.getName());
+        verify(itemRepository).save(any(Item.class));
+    }
+
+    @Test
+    void updateItem_ShouldReturnUpdatedItemNewDescriptionAndAvailable() {
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(itemRepository.findById(item.getId())).thenReturn(Optional.of(item));
+        when(itemRepository.save(any(Item.class))).thenReturn(item);
+        Item updatedItem = Item.builder().description("newDescription").available(false).build();
+        ItemDto result = itemService.updateItem(user.getId(), item.getId(), updatedItem);
+        assertNotNull(result);
+        assertEquals(updatedItem.getAvailable(), result.getAvailable());
+
+        assertEquals(updatedItem.getDescription(), result.getDescription());
+        verify(itemRepository).save(any(Item.class));
+    }
+
+    @Test
     void updateItem_ShouldThrowNotFoundExceptionUser() {
         when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
         Item updatedItem = Item.builder().name("newName").description("newDescription").build();

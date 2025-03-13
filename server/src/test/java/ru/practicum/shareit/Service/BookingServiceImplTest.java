@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.ShareItApp;
+import ru.practicum.shareit.ShareItServer;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.Status;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -23,7 +23,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @Transactional
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@SpringBootTest(classes = ShareItApp.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(classes = ShareItServer.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class BookingServiceImplTest {
     private final BookingRepository repository;
     private final UserRepository userRepository;
@@ -42,6 +42,5 @@ public class BookingServiceImplTest {
         assertThat(booking2.getId(), notNullValue());
         assertThat(booking2.getBooker().getId(), equalTo(user.getId()));
         assertThat(booking2.getStatus().toString(), equalTo("WAITING"));
-
     }
 }

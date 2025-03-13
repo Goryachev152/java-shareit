@@ -129,6 +129,42 @@ public class BookingServiceTest {
     }
 
     @Test
+    void findBookingByUserCurrent_ShouldReturnListBooking() {
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(bookingRepository.findByBookerIdAndStatusCurrent(anyLong(), any())).thenReturn(Collections.singletonList(booking));
+        List<BookingDto> result = bookingService.findBookingItemByUserId(user.getId(), "CURRENT");
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(booking.getId(), result.get(0).getId());
+        verify(userRepository).findById(user.getId());
+        verify(bookingRepository).findByBookerIdAndStatusCurrent(anyLong(), any());
+    }
+
+    @Test
+    void findBookingByUserPast_ShouldReturnListBooking() {
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(bookingRepository.findByBookerIdAndStatusPast(anyLong(), any())).thenReturn(Collections.singletonList(booking));
+        List<BookingDto> result = bookingService.findBookingItemByUserId(user.getId(), "PAST");
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(booking.getId(), result.get(0).getId());
+        verify(userRepository).findById(user.getId());
+        verify(bookingRepository).findByBookerIdAndStatusPast(anyLong(), any());
+    }
+
+    @Test
+    void findBookingByUserFuture_ShouldReturnListBooking() {
+        when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+        when(bookingRepository.findByBookerIdAndStatusFuture(anyLong(), any())).thenReturn(Collections.singletonList(booking));
+        List<BookingDto> result = bookingService.findBookingItemByUserId(user.getId(), "FUTURE");
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(booking.getId(), result.get(0).getId());
+        verify(userRepository).findById(user.getId());
+        verify(bookingRepository).findByBookerIdAndStatusFuture(anyLong(), any());
+    }
+
+    @Test
     void findBookingByUser_ShouldThrowNotFoundExceptionUser() {
         when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
         NotFoundException exception = assertThrows(NotFoundException.class, () -> {
@@ -180,6 +216,54 @@ public class BookingServiceTest {
         assertEquals(booking.getId(), result.get(0).getId());
         verify(userRepository).findById(owner.getId());
         verify(bookingRepository).findByOwnerIdAndStatusCurrent(anyLong(), any());
+    }
+
+    @Test
+    void findBookingByOwnerIdPast_shouldIsReturnBookingDto() {
+        when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
+        when(bookingRepository.findByOwnerIdAndStatusPast(anyLong(), any())).thenReturn(Collections.singletonList(booking));
+        List<BookingDto> result = bookingService.findBookingItemByOwnerId(owner.getId(), "PAST");
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(booking.getId(), result.get(0).getId());
+        verify(userRepository).findById(owner.getId());
+        verify(bookingRepository).findByOwnerIdAndStatusPast(anyLong(), any());
+    }
+
+    @Test
+    void findBookingByOwnerIdFuture_shouldIsReturnBookingDto() {
+        when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
+        when(bookingRepository.findByOwnerIdAndStatusFuture(anyLong(), any())).thenReturn(Collections.singletonList(booking));
+        List<BookingDto> result = bookingService.findBookingItemByOwnerId(owner.getId(), "FUTURE");
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(booking.getId(), result.get(0).getId());
+        verify(userRepository).findById(owner.getId());
+        verify(bookingRepository).findByOwnerIdAndStatusFuture(anyLong(), any());
+    }
+
+    @Test
+    void findBookingByOwnerIdWaiting_shouldIsReturnBookingDto() {
+        when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
+        when(bookingRepository.findByOwnerIdAndStatusOrderByStartDesc(anyLong(), any())).thenReturn(Collections.singletonList(booking));
+        List<BookingDto> result = bookingService.findBookingItemByOwnerId(owner.getId(), "WAITING");
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(booking.getId(), result.get(0).getId());
+        verify(userRepository).findById(owner.getId());
+        verify(bookingRepository).findByOwnerIdAndStatusOrderByStartDesc(anyLong(), any());
+    }
+
+    @Test
+    void findBookingByOwnerIdRejected_shouldIsReturnBookingDto() {
+        when(userRepository.findById(owner.getId())).thenReturn(Optional.of(owner));
+        when(bookingRepository.findByOwnerIdAndStatusOrderByStartDesc(anyLong(), any())).thenReturn(Collections.singletonList(booking));
+        List<BookingDto> result = bookingService.findBookingItemByOwnerId(owner.getId(), "REJECTED");
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        assertEquals(booking.getId(), result.get(0).getId());
+        verify(userRepository).findById(owner.getId());
+        verify(bookingRepository).findByOwnerIdAndStatusOrderByStartDesc(anyLong(), any());
     }
 
     @Test

@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.ShareItApp;
+import ru.practicum.shareit.ShareItServer;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
@@ -18,7 +18,7 @@ import static org.hamcrest.Matchers.notNullValue;
 
 @Transactional
 @RequiredArgsConstructor(onConstructor_ = @Autowired)
-@SpringBootTest(classes = ShareItApp.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
+@SpringBootTest(classes = ShareItServer.class, webEnvironment = SpringBootTest.WebEnvironment.NONE)
 public class ItemServiceImplTest {
     private final ItemRepository repository;
     private final UserRepository userRepository;
